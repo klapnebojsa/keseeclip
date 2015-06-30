@@ -30,7 +30,6 @@ import javax.swing.JComponent;
  * @author Nebojsa
  */
 public class Prikazi extends JComponent implements Printable { 
-	double aa;
     double p = 1;
     private int trenutniRbrStrane;
     private Vector lineVector;
@@ -149,7 +148,6 @@ public class Prikazi extends JComponent implements Printable {
         y += fontSize;
       }
     }
-
     
     public int print(Graphics g, PageFormat pageFormat, int rbrStrane) {
         if (rbrStrane >= pageVector.size()) return NO_SUCH_PAGE;
