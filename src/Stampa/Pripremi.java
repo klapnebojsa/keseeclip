@@ -43,7 +43,7 @@ public class Pripremi {
         if (f == null) {
             return;
         }
-        //Ovde odraditi pripremu Stampe
+        //Ovde odraditi pripremu Stampe umesto Pop up file dialog-a
         
         if (ispravnaPriprema){
             FormPrintPreview formPrintPreview = new FormPrintPreview(mt1, koZove, f);

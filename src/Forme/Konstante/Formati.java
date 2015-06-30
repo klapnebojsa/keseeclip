@@ -5,6 +5,9 @@
  */
 package Forme.Konstante;
 
+import java.text.ParseException;
+import javax.swing.text.MaskFormatter;
+
 /**
  *
  * @author Nebojsa
@@ -19,7 +22,7 @@ public class Formati {
         return "dd.MM.yyyy";
     }
 
-    public String getMaskedFormat() {
+    public String getMaskedFormat() throws ParseException {
         return "##.##.####";
     }
 

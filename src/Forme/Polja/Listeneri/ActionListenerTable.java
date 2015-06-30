@@ -97,31 +97,6 @@ public class ActionListenerTable {
       
             Pripremi pripremi = new Pripremi(mt1, koZove);
             pripremi.StampuTabele();
-            
-            //DrawCanvas drawCanvas = new DrawCanvas();
-            //formSliku.FormSliku();
-           
-            //Graphics g;
-            /*GraphicComponentClass graphicComponentClass = new GraphicComponentClass();
-            
-            
-        CallingGraphics callingGraphics = new CallingGraphics(graphicComponentClass);
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.getContentPane().add(callingGraphics.getGraphicComponent());
-        f.getContentPane().add(callingGraphics.getLast(), "Last");
-        f.setSize(400,300);
-        callingGraphics.crtaj();
-        f.setLocation(200,200);            
-        f.setVisible(true);  */ 
-            
-            
-            /*PrintPreview printPreview = new PrintPreview();*/
-            //printPreview.paintComponent(graphicComponentClass.getG());
-            
-            //printPreview.paintComponent(null);
-        
-
         }
 
         
