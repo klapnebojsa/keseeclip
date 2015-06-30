@@ -30,7 +30,7 @@ import javax.swing.JComponent;
  * @author Nebojsa
  */
 public class Prikazi extends JComponent implements Printable { 
-	double a;
+	double aa;
     double p = 1;
     private int trenutniRbrStrane;
     private Vector lineVector;
