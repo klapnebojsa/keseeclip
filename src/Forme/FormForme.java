@@ -20,6 +20,7 @@ import Forme.Tabele.MojaTabela;
 import Forme.Polja.Listeneri.FocusTxt;
 import Forme.Polja.Prikazi.InfoLinija;
 import Forme.Polja.Prikazi.PoljaIzTabeleDefinicija;
+import Forme.PopUpovi.PopUp;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -120,7 +121,13 @@ public class FormForme extends JFrame {
             //radioComboCheck = r.split("&&");
         } catch (Exception e) {
         }
-
+        if(metaData==null){
+            PopUp popUp = new PopUp(KoZove, "!!! NEMA KONEKCOJE SA BAZOM !!!  \n  PROVERITE DA LI JE SERVER STARTOVAN");
+            popUp.Ok();
+            this.setVisible(false);
+            KoZove.setEnabled(true);
+            return;
+        }
         //rezolucija
         RezolucijaEkrana re = new RezolucijaEkrana();
         Dimension fullScr = re.FullScreen();

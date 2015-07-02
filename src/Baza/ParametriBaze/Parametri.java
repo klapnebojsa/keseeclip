@@ -20,8 +20,7 @@ public class Parametri implements Serializable {
 
     public Parametri() {
         JDBC_DRIVER = "com.mysql.jdbc.Driver";
-        DB_URL = "jdbc:mysql://localhost/kese?characterEncoding=UTF-8&useUnicode=true";
-        //DB_URL = "jdbc:mysql://localhost/finko?characterEncoding=UTF-8&useUnicode=true";       
+        DB_URL = "jdbc:mysql://localhost/kese?characterEncoding=UTF-8&useUnicode=true";    
         USER = "root";
         PASS = "";
     }

@@ -50,6 +50,7 @@ public class ActionListenerTable {
         PopUp popUp = null;
         
         OgranicenjaListeneri oL = new OgranicenjaListeneri(brokerDAO.a.ImeKlase());
+        
         //---------------- F1 NOVI -------------------------------------------------------------------- 
         oL.proveriNoviListener();
         if (e.getKeyCode() == ft.getFtNovi() && !oL.getOgranicenja()) {                    // F1-Novi
@@ -87,19 +88,15 @@ public class ActionListenerTable {
 
             poljaEnabDisab.PoljeRacunDisabled(poljaDisabled);
         }
+        
         //---------------- F5 STAMPA --------------------------------------------------------------------
         oL.proveriStampaListener();
-        
-
-        
-        
         if (e.getKeyCode() == ft.getFtStampa() && !oL.getOgranicenja()) {                 // F5-Stampa
       
             Pripremi pripremi = new Pripremi(mt1, koZove);
             pripremi.StampuTabele();
         }
 
-        
         //---------------- F12 MARGINE --------------------------------------------------------------------
         oL.proveriBrisiListener();
         if (e.getKeyCode() == ft.getFtMargine() && !oL.getOgranicenja()) {                 // F12-Margine
