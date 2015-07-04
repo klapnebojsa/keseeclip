@@ -56,5 +56,4 @@ public class Parametri implements Serializable {
     public void setPASS(String PASS) {
         this.PASS = PASS;
     }
-    //hhhhhhhhhhhhh
 }
