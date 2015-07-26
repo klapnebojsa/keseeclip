@@ -17,7 +17,7 @@ public class OgranicenjaListeneri {
     }   
     
     private String NoviListener(){
-        return "Margine,";
+        return "Margine,Vlasnik,";
     }
     private String IzmenaListener(){
         return "";
@@ -26,7 +26,7 @@ public class OgranicenjaListeneri {
         return "Margine,";
     }
     private String BrisiListener(){
-        return "Margine,";
+        return "Margine,Vlasnik,";
     }
     private String StampaListener(){
         return "Margine,";

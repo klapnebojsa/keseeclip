@@ -59,13 +59,10 @@ public class ClickTbl{
                 }
                 //Mouse right click 
                 if ( me.getButton() == MouseEvent.BUTTON3){
-                    TablePopUp tablePopUp = new TablePopUp(mt1, me);
+                    TablePopUp tablePopUp = new TablePopUp(mt1, me, poljaIzTabele);
                     tablePopUp.rightClick();
                 }
             }
-        });    
-            
-       
+        });          
     }
-
 }

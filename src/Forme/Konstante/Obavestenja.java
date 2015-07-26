@@ -26,7 +26,7 @@ public class Obavestenja {
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtIspravi()) + ">-Izmena";}        
         oL.proveriMargineListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtMargine()) + ">-Margine";}        
-        oL.proveriBrisiListener();
+        oL.proveriStampaListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtStampa()) + ">-Stampa";}        
         oL.proveriBrisiListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtBrisi()) + ">-Brisanje";}

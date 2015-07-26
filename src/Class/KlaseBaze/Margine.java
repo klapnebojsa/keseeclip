@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Margine.findByDole", query = "SELECT m FROM Margine m WHERE m.dole = :dole"),
     @NamedQuery(name = "Margine.findByMedjX", query = "SELECT m FROM Margine m WHERE m.medjX = :medjX"),
     @NamedQuery(name = "Margine.findByMedjY", query = "SELECT m FROM Margine m WHERE m.medjY = :medjY"),
+    @NamedQuery(name = "Margine.findByMedjYDw", query = "SELECT m FROM Margine m WHERE m.medjYDw = :medjYDw"),    
     @NamedQuery(name = "Margine.findByVelFonta", query = "SELECT m FROM Margine m WHERE m.velFonta = :velFonta"),
     @NamedQuery(name = "Margine.findByFont", query = "SELECT m FROM Margine m WHERE m.font = :font"),
     @NamedQuery(name = "Margine.findByStampac", query = "SELECT m FROM Margine m WHERE m.stampac = :stampac"),
@@ -50,17 +51,19 @@ public class Margine extends AbstractDAO implements Serializable {
     private String idMargine;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Levo")
-    private BigDecimal levo;
+    private Integer levo;
     @Column(name = "Desno")
-    private BigDecimal desno;
+    private Integer desno;
     @Column(name = "Gore")
-    private BigDecimal gore;
+    private Integer gore;
     @Column(name = "Dole")
-    private BigDecimal dole;
+    private Integer dole;
     @Column(name = "MedjX")
     private BigDecimal medjX;
     @Column(name = "MedjY")
     private BigDecimal medjY;
+    @Column(name = "MedjYDw")
+    private BigDecimal medjYDw;
     @Column(name = "VelFonta")
     private Integer velFonta;
     @Column(name = "Font")
@@ -87,35 +90,35 @@ public class Margine extends AbstractDAO implements Serializable {
         this.idMargine = idMargine;
     }
 
-    public BigDecimal getLevo() {
+    public Integer getLevo() {
         return levo;
     }
 
-    public void setLevo(BigDecimal levo) {
+    public void setLevo(Integer levo) {
         this.levo = levo;
     }
 
-    public BigDecimal getDesno() {
+    public Integer getDesno() {
         return desno;
     }
 
-    public void setDesno(BigDecimal desno) {
+    public void setDesno(Integer desno) {
         this.desno = desno;
     }
 
-    public BigDecimal getGore() {
+    public Integer getGore() {
         return gore;
     }
 
-    public void setGore(BigDecimal gore) {
+    public void setGore(Integer gore) {
         this.gore = gore;
     }
 
-    public BigDecimal getDole() {
+    public Integer getDole() {
         return dole;
     }
 
-    public void setDole(BigDecimal dole) {
+    public void setDole(Integer dole) {
         this.dole = dole;
     }
 
@@ -135,6 +138,14 @@ public class Margine extends AbstractDAO implements Serializable {
         this.medjY = medjY;
     }
 
+    public BigDecimal getMedjYDw() {
+        return medjYDw;
+    }
+
+    public void setMedjYDw(BigDecimal medjYDw) {
+        this.medjYDw = medjYDw;
+    }
+    
     public Integer getVelFonta() {
         return velFonta;
     }
@@ -201,16 +212,16 @@ public class Margine extends AbstractDAO implements Serializable {
     }
 //-----------------------------Deo za ispravku----------------------------------------------------------------------- 
     public String ZaglavljeTabele() { //Opisi polja tabele koji se vide na formi
-        return "Sifra,Margina Levo,Margina Desno,Margina Gore,Margina Dole,Medjuprostor X,Medjuprostor Y,Velicina Fonta,Font,Stampac,Format Papira,Orjentacija";
+        return "Sifra,Margina Levo,Margina Desno,Margina Gore,Margina Dole,Medjuprostor X,Medjuprostor Y,Medjuprostor Y dole,Velicina Fonta,Font,Stampac,Format Papira,Orjentacija";
     }
 
     public String PoljaBaze() { //Polja Baze koja se vide na formi i upisuju se u bazu
-        return "IdMargine,Levo,Desno,Gore,Dole,MedjX,MedjY,VelFonta,Font,Stampac,FormatPapira,Orjentacija";
+        return "IdMargine,Levo,Desno,Gore,Dole,MedjX,MedjY,MedjYDw,VelFonta,Font,Stampac,FormatPapira,Orjentacija";
     }
 
     public String PoljaBazeZaUpis() {  //Id AutoIncrement i ne pominje se inace bi bio naveden tamo gde mu je mesto
         //Navode se sva polja koja se upisuju
-        return "IdMargine,Levo,Desno,Gore,Dole,MedjX,MedjY,VelFonta,Font,Stampac,FormatPapira,Orjentacija";
+        return "IdMargine,Levo,Desno,Gore,Dole,MedjX,MedjY,MedjYDw,VelFonta,Font,Stampac,FormatPapira,Orjentacija";
     }
 
     public String sourClass() {
@@ -250,8 +261,9 @@ public class Margine extends AbstractDAO implements Serializable {
         
         podaci += "Fr@me%20%1%Medjuprostor%New##"; 
         podaci += "&& ";                                        //MedjX        TextField       2
-        podaci += "&& ";                                        //MedjY        TextField       2         
-        podaci += "&&CoBox%%" + elFontVel;                      //VelFonta      ComboBox        3a + 3b
+        podaci += "&& ";                                        //MedjY        TextField       2
+        podaci += "&& ";                                        //MedjYDw      TextField       2        
+        podaci += "&&CoBox%%" + elFontVel;                      //VelFonta     ComboBox        3a + 3b
         
         podaci += "Fr@me%40%1%Parametri%Right##";        
         podaci += "&&CoBox%%" + elFontObl;                      //Font         ComboBox        4a + 4b
@@ -327,26 +339,28 @@ public class Margine extends AbstractDAO implements Serializable {
 
         pomoc = provere.proveriString(getIdMargine(), OpisiPolja[0]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 0;}}
-        pomoc = provere.proveriBigDecimal(getLevo(), OpisiPolja[1]);
+        pomoc = provere.proveriInteger(getLevo(), OpisiPolja[1]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 1;}}
-        pomoc = provere.proveriBigDecimal(getDesno(), OpisiPolja[2]);
+        pomoc = provere.proveriInteger(getDesno(), OpisiPolja[2]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 2;}}
-        pomoc = provere.proveriBigDecimal(getDole(), OpisiPolja[3]);
+        pomoc = provere.proveriInteger(getDole(), OpisiPolja[3]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 3;}}
-        pomoc = provere.proveriBigDecimal(getGore(), OpisiPolja[4]);
+        pomoc = provere.proveriInteger(getGore(), OpisiPolja[4]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 4;}}
         pomoc = provere.proveriBigDecimal(getMedjX(), OpisiPolja[5]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 5;}}
         pomoc = provere.proveriBigDecimal(getMedjY(), OpisiPolja[6]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 6;}}
-        pomoc = provere.proveriInteger(getVelFonta(), OpisiPolja[7]);
-        if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 7;}}
-        pomoc = provere.proveriString(getStampac(), OpisiPolja[8]);
+        pomoc = provere.proveriBigDecimal(getMedjYDw(), OpisiPolja[7]);
+        if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 7;}}         
+        pomoc = provere.proveriInteger(getVelFonta(), OpisiPolja[8]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 8;}}
-        pomoc = provere.proveriString(getFormatPapira(), OpisiPolja[9]);
+        pomoc = provere.proveriString(getStampac(), OpisiPolja[9]);
         if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 9;}}
-        pomoc = provere.proveriString(getOrjentacija(), OpisiPolja[10]);
-        if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 10;}}        
+        pomoc = provere.proveriString(getFormatPapira(), OpisiPolja[10]);
+        if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 10;}}
+        pomoc = provere.proveriString(getOrjentacija(), OpisiPolja[11]);
+        if (pomoc != null) {poruka[1] = (poruka[1] == null) ? pomoc : poruka[1] + pomoc; if (poruka[0] == null) { poruka[0] = 11;}}        
 
         return poruka;
     }
@@ -364,6 +378,7 @@ public class Margine extends AbstractDAO implements Serializable {
                 + "Gore="          + gore         + " ,  "
                 + "MedjX="         + medjX        + " ,  "
                 + "MedjY="         + medjY        + " ,  "
+                + "MedjYDw="       + medjYDw      + " ,  "                
                 + "VelFonta="      + velFonta     + " ,  "
                 + "Font='"         + font         + "',  "                
                 + "Stampac='"      + stampac      + "',  "
@@ -379,6 +394,7 @@ public class Margine extends AbstractDAO implements Serializable {
                    + gore         + " ,  "
                    + medjX        + " ,  "
                    + medjY        + " ,  "
+                   + medjYDw      + " ,  "                
                    + velFonta     + " , '"
                    + font         + "', '"                
                    + stampac      + "', '"

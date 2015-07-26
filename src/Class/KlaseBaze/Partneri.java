@@ -177,7 +177,7 @@ public class Partneri extends AbstractDAO implements Serializable {
         return "Sifra Partner,Naziv Partnera,Adresa,Mesto,Tel,MB,PIB,PDV,Delatnost";
     }
 
-    public String PoljaBaze() {  //Polja Baze koja se vise na formi i upisuju se u bazu
+    public String PoljaBaze() {  //Polja Baze koja se vide na formi i upisuju se u bazu
         return "IdPartner,NazivPartnera,Adresa,Mesto,Tel,MB,PIB,PDV,Delatnost";
     }
 
@@ -210,7 +210,7 @@ public class Partneri extends AbstractDAO implements Serializable {
      //podaci = (java.lang.String) " && &&CoBox%%5@@10@@15@@20@@25@@30&&CoBox%%5@@10@@15@@20@@25@@30&& &&CoBox%%5@@10@@15@@20@@25@@30&& "
      }  */
     public String ImeKlase() {
-        return "partneri";
+        return "Partneri";
     }
     public String SifraMargina() {
         idPartner = BigInteger.valueOf(12345677);

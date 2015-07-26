@@ -7,6 +7,7 @@
     <class>Class.KlaseBaze.KeseProba</class>
     <class>Class.KlaseBaze.KutijaProba</class>
     <class>Class.KlaseBaze.Margine</class>
+    <class>Class.KlaseBaze.Vlasnik</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/kese?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value=""/>

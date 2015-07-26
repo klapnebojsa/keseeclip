@@ -39,8 +39,7 @@ public abstract class Opsta {
             }
             VratiMeta();
             zatvoriBazu();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) { }
         return StaJeTrazeno;
     }
 

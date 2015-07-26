@@ -28,7 +28,7 @@ public class NapuniCombo {
     }
     
     public String FontVelicina() {
-        String a = "7@@8@@9@@10@@11@@12@@13@@14";
+        String a = "5@@6@@7@@8@@9@@10@@11@@12@@13@@14@@15@@16";
         return a;
     }
     
@@ -58,6 +58,11 @@ public class NapuniCombo {
     public String Orijentacija() {
         String a = "Uspravno@@Polozeno";
         return a;
-    }    
+    }
+    
+    public String procPreviewWidth() {
+        String a = "@@80 %@@100 %@@150 %@@200 %@@250 %@@300 %@@350 %@@400 %@@450 %@@500 %@@page Width@@page Height";
+        return a;
+    }
     
 }

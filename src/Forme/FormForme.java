@@ -122,7 +122,7 @@ public class FormForme extends JFrame {
         } catch (Exception e) {
         }
         if(metaData==null){
-            PopUp popUp = new PopUp(KoZove, "!!! NEMA KONEKCOJE SA BAZOM !!!  \n  PROVERITE DA LI JE SERVER STARTOVAN");
+            PopUp popUp = new PopUp(KoZove, "   !!! NEMA KONEKCOJE SA BAZOM !!!  \n \n PROVERITE DA LI JE SERVER STARTOVAN");
             popUp.Ok();
             this.setVisible(false);
             KoZove.setEnabled(true);

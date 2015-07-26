@@ -72,7 +72,7 @@ public class PoljaIzTabeleDefinicija implements KeyListener, ActionListener {
     JLabel[] labels;
     JButton[] buttons;
     JPanel frameForma;
-    BrokerDAO brokerDAO;
+    public BrokerDAO brokerDAO;
     JFormattedTextField[] texts;
     JComboBox[] combos;
     String kojiUpis;  // Sta je upis: Novi upis ili Izmena postojeceg 

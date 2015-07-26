@@ -6,6 +6,8 @@
 package Forme.PopUpovi;
 
 import Forme.Konstante.FunkcijskiTasteri;
+import Forme.Polja.Listeneri.OgranicenjaListeneri;
+import Forme.Polja.Prikazi.PoljaIzTabeleDefinicija;
 import Forme.Tabele.MojaTabela;
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -31,10 +33,12 @@ public class TablePopUp implements ActionListener {
     JMenuItem menuItemStampa;
     MojaTabela mt1;
     MouseEvent me;
+    PoljaIzTabeleDefinicija poljaIzTabele;
     
-    public TablePopUp(MojaTabela mt1, MouseEvent me){
+    public TablePopUp(MojaTabela mt1, MouseEvent me, PoljaIzTabeleDefinicija poljaIzTabele){
         this.mt1=mt1;
-        this.me=me;        
+        this.me=me;
+        this.poljaIzTabele=poljaIzTabele;
     }
 
     //Mouse right click    
@@ -44,33 +48,47 @@ public class TablePopUp implements ActionListener {
 
         if ( me.getButton() == MouseEvent.BUTTON3) {
             if(mt1.getTable().isEnabled()){
-                menuItemNovi = new JMenuItem("Novi");
-                menu.add(menuItemNovi);
-
+                
+                OgranicenjaListeneri oL = new OgranicenjaListeneri(poljaIzTabele.brokerDAO.a.ImeKlase());
+                
+                oL.proveriNoviListener();
+                if (!oL.getOgranicenja()){                
+                    menuItemNovi = new JMenuItem("Novi");
+                    menu.add(menuItemNovi);
+                    menuItemNovi.addActionListener(this);                    
+                }
+                
+                oL.proveriIzmenaListener();
                 menuItemIzmeni = new JMenuItem("Izmeni");
-                if (mt1.getTable().getSelectedRow()!= -1){menu.add(menuItemIzmeni);}
+                if (mt1.getTable().getSelectedRow()!= -1 && !oL.getOgranicenja()){
+                    menu.add(menuItemIzmeni);
+                    menuItemIzmeni.addActionListener(this);                    
+                }
 
+                oL.proveriBrisiListener();                
                 menuItemBrisi = new JMenuItem("Brisi");
-                if (mt1.getTable().getSelectedRow()!= -1){menu.add(menuItemBrisi);}
+                if (mt1.getTable().getSelectedRow()!= -1 && !oL.getOgranicenja()){
+                    menu.add(menuItemBrisi);
+                    menuItemBrisi.addActionListener(this);                
+                }
                 
-                menuItemStampa = new JMenuItem("Stampa");
-                menu.add(menuItemStampa);
+                oL.proveriStampaListener();
+                if (!oL.getOgranicenja()){                
+                    menuItemStampa = new JMenuItem("Stampa");
+                    menu.add(menuItemStampa);
+                    menuItemStampa.addActionListener(this);                    
+                }
                 
-                menuItemMargine = new JMenuItem("Unos Margina");
-                menu.add(menuItemMargine);                
+                oL.proveriMargineListener();
+                if (!oL.getOgranicenja()){                 
+                    menuItemMargine = new JMenuItem("Unos Margina");
+                    menu.add(menuItemMargine);
+                    menuItemMargine.addActionListener(this);                    
+                }
                 
                 mt1.setComponentPopupMenu(menu);
-                
-                menu.add("Odustani");
-                                
+                menu.add("Odustani");               
                 menu.show(me.getComponent(), me.getX(), me.getY());
-
-                menuItemNovi.addActionListener(this);
-                menuItemIzmeni.addActionListener(this);
-                menuItemBrisi.addActionListener(this);
-                menuItemMargine.addActionListener(this);
-                menuItemStampa.addActionListener(this);
- 
             }
         }      
     }    

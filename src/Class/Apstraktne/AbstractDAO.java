@@ -93,5 +93,4 @@ public abstract class AbstractDAO {
         }
         return setujPodatke;
     }
-
 }

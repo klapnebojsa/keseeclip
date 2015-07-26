@@ -10,6 +10,7 @@ import Class.Apstraktne.AbstractDAO;
 import Class.KlaseBaze.KeseProba;
 import Class.KlaseBaze.KutijaProba;
 import Class.KlaseBaze.Partneri;
+import Class.KlaseBaze.Vlasnik;
 import java.awt.AWTException;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ public class FormGlavna extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         Partneri = new javax.swing.JMenuItem();
+        Vlasnik = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -69,14 +71,20 @@ public class FormGlavna extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
 
         Partneri.setText("Partneri");
-        Partneri.setActionCommand("Partneri");
         Partneri.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 PartneriActionPerformed(evt);
             }
         });
         jMenu1.add(Partneri);
-        Partneri.getAccessibleContext().setAccessibleName("Partneri");
+
+        Vlasnik.setText("Vlasnik");
+        Vlasnik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VlasnikActionPerformed(evt);
+            }
+        });
+        jMenu1.add(Vlasnik);
 
         jMenuBar1.add(jMenu1);
 
@@ -140,6 +148,19 @@ public class FormGlavna extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_PartneriActionPerformed
 
+    private void VlasnikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VlasnikActionPerformed
+        FormForme f = null;
+        AbstractDAO klasa;
+        klasa = new Vlasnik();
+        try {
+            f = new FormForme(this, "VLASNIK", 0.9, "");
+            f.k = klasa;
+            f.main();
+        } catch (SQLException | ParseException | AWTException ex) {
+            Logger.getLogger(FormGlavna.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_VlasnikActionPerformed
+
     /**
      * @param args the command line arguments
      * @throws java.lang.ClassNotFoundException
@@ -168,6 +189,7 @@ public class FormGlavna extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Partneri;
+    private javax.swing.JMenuItem Vlasnik;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

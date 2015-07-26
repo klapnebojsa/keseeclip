@@ -47,5 +47,17 @@ public class Alignment {
         };
 
     }
-
+    //Na osnovu alignmenta tabele odredjujemo alignment text boxa
+    public String getCellAlignment(TableCellRenderer tR) {
+        String cellAlignm = "Left";
+        String k = tR.toString();
+        
+        if (k.toUpperCase().contains("horizontalAlignment=RIGHT".toUpperCase())) {
+            cellAlignm = "Right";
+        };
+        if (k.toUpperCase().contains("horizontalAlignment=CENTER".toUpperCase())) {
+            cellAlignm = "Center";
+        };
+        return cellAlignm;
+    }
 }
