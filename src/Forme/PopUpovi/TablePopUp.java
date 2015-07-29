@@ -30,7 +30,10 @@ public class TablePopUp implements ActionListener {
     JMenuItem menuItemIzmeni;
     JMenuItem menuItemBrisi;
     JMenuItem menuItemMargine;
-    JMenuItem menuItemStampa;
+    JMenuItem menuItemStampaTbl;
+    JMenuItem menuItemStampaPodTbl;    
+    JMenuItem menuItemStampaIzv;
+    
     MojaTabela mt1;
     MouseEvent me;
     PoljaIzTabeleDefinicija poljaIzTabele;
@@ -44,7 +47,7 @@ public class TablePopUp implements ActionListener {
     //Mouse right click    
     public void rightClick(){
         JPopupMenu menu = new JPopupMenu("Popup");
-        menu.setPreferredSize(new Dimension(200, 150));
+        menu.setPreferredSize(new Dimension(225, 200));
 
         if ( me.getButton() == MouseEvent.BUTTON3) {
             if(mt1.getTable().isEnabled()){
@@ -66,19 +69,33 @@ public class TablePopUp implements ActionListener {
                 }
 
                 oL.proveriBrisiListener();                
-                menuItemBrisi = new JMenuItem("Brisi");
+                menuItemBrisi = new JMenuItem("Briši");
                 if (mt1.getTable().getSelectedRow()!= -1 && !oL.getOgranicenja()){
                     menu.add(menuItemBrisi);
                     menuItemBrisi.addActionListener(this);                
                 }
                 
-                oL.proveriStampaListener();
+                oL.proveriStampaTblListener();
                 if (!oL.getOgranicenja()){                
-                    menuItemStampa = new JMenuItem("Stampa");
-                    menu.add(menuItemStampa);
-                    menuItemStampa.addActionListener(this);                    
+                    menuItemStampaTbl = new JMenuItem("Štampa tabele");
+                    menu.add(menuItemStampaTbl);
+                    menuItemStampaTbl.addActionListener(this);                    
                 }
                 
+                oL.proveriStampaPodTblListener();
+                if (!oL.getOgranicenja()){                
+                    menuItemStampaPodTbl = new JMenuItem("Štampa Stavki Dokumenta");
+                    menu.add(menuItemStampaPodTbl);
+                    menuItemStampaPodTbl.addActionListener(this);                    
+                }
+                
+                oL.proveriStampaIzvListener();
+                if (!oL.getOgranicenja()){                
+                    menuItemStampaIzv = new JMenuItem("Štampa Izveštaja");
+                    menu.add(menuItemStampaIzv);
+                    menuItemStampaIzv.addActionListener(this);                    
+                }
+               
                 oL.proveriMargineListener();
                 if (!oL.getOgranicenja()){                 
                     menuItemMargine = new JMenuItem("Unos Margina");
@@ -113,8 +130,14 @@ public class TablePopUp implements ActionListener {
         if(menu == menuItemMargine){          
             robot.keyPress(ft.getFtMargine());            
         }        
-        if(menu == menuItemStampa){          
-            robot.keyPress(ft.getFtStampa());            
-        }        
+        if(menu == menuItemStampaTbl){          
+            robot.keyPress(ft.getFtStampaTbl());            
+        }
+        if(menu == menuItemStampaPodTbl){          
+            robot.keyPress(ft.getFtStampaPodTbl());            
+        } 
+        if(menu == menuItemStampaIzv){          
+            robot.keyPress(ft.getFtStampaIzv());            
+        }                 
     }
 }

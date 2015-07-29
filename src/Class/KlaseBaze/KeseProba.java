@@ -212,11 +212,11 @@ public class KeseProba extends AbstractDAO implements Serializable {
      */
     //-----------------------------Deo za ispravku----------------------------------------------------------------------- 
     public String ZaglavljeTabele() { //Opisi polja tabele koji se bide na formi
-        return "Sifra,Opis,Sirina,F....,Visina,Decimal,Double,Date,Racun1,Racun4";
+        return "Sifra,Racun4,Opis,Sirina,F....,Visina,Decimal,Double,Date,Racun1";
     }
 
     public String PoljaBaze() { //Polja Baze koja se vide na formi i upisuju se u bazu
-        return "IdKese,OpisKese,SKese,FKese,VKese,prom,prom2,Datum,Racun1,Racun4";
+        return "IdKese,Racun4,OpisKese,SKese,FKese,VKese,prom,prom2,Datum,Racun1";
     }
 
     public String PoljaBazeZaUpis() {  //Id AutoIncrement i ne pominje se inace bi bio naveden tamo gde mu je mesto

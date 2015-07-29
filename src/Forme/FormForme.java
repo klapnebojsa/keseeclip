@@ -48,7 +48,7 @@ public class FormForme extends JFrame {
     List myDataList = null;
     String zaglTabele = null;
     String opisPolja = null;
-    ResultSetMetaData metaData = null;
+    public ResultSetMetaData metaData = null;
     int[] kljucevi = null;
     int[] poljaDisabled = null;
     JFrame KoZove;

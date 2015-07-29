@@ -10,9 +10,14 @@ import Forme.Tabele.MojaTabela;
 import Sistem.OsnovneDefinicije.RezolucijaEkrana;
 import Stampa.PagesPripremi;
 import Stampa.PreviewMenuBar;
-import Stampa.PripremiFooter;
-import Stampa.PripremiHeader;
-import Stampa.PripremiTabelu;
+import Stampa.Pripremi.PripremiFooter;
+import Stampa.Pripremi.PripremiHeader;
+import Stampa.Pripremi.PripremiKraj;
+import Stampa.Pripremi.PripremiNaslov;
+import Stampa.Pripremi.PripremiSve;
+import Stampa.Pripremi.PripremiTabelu;
+import Stampa.Pripremi.PripremiUvod;
+import Stampa.Pripremi.PripremiZakljucak;
 import Stampa.StampaSetujPage;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,76 +35,110 @@ import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-
 /**
- *
  * @author Nebojsa
  */
 public class FormPrintPreview extends JFrame implements ActionListener{
-    MojaTabela mt1;
+    public MojaTabela mt1;
     public FormForme koZove;
     boolean ispravanPrikaz = true;
-    PageFormat pageFormat;
+    public PageFormat pageFormat;
     List mojeMargine;
     public PagesPripremi prikazi;
     public PreviewMenuBar stampaMenuBar;
     PrinterJob pj;
     public StampaSetujPage stampaSetujPage;
-    Vector tableLineVectorAll;
-    Vector headerLineVectorAll;
-    Vector footerLineVectorAll;
+   
+    public Vector headerLineVectorAll;      //Header (na svakoj strani)
+    public Vector naslovLineVectorAll;      //Naslov (samo na prvoj strani)
+    public Vector uvodLineVectorAll;        //Uvod na vrhu strane(na svakoj strani)
+    public Vector tableHeaderLineVector;    //ZaglavljeTabele
+    public Vector tableMedjuZbirVector;     //MedjuZbir u tabeli (donos i prenos). Samo oblik. Vrednosti se dodaju dinamicki
+    public Vector kojaPoljaMedjuZbirVector; //MedjuZbir u tabeli (donos i prenos). Samo oblik. Vrednosti se dodaju dinamicki    
+    public Vector tableLineVectorAll;       //Tabela ili podaci za izvestaj
+    public Vector zakljucakLineVectorAll;   //Zakljucak na dnu (na svakoj strani)
+    public Vector krajLineVectorAll;        //Kraj na kraju zadnje strane
+    public Vector footerLineVectorAll;      //Footer (na svakoj strani)
+
+    public PripremiHeader pripremiHeader; 
+    public PripremiNaslov pripremiNaslov;
+    public PripremiUvod pripremiUvod;
+    //Pripremi tabelu moze ds bude priprema tabele ako je Tabelarni prikaz ali i ne mora ako je potreban neki drugi oblik stampe
+    public PripremiTabelu pripremiTabelu;
     
-    PripremiTabelu pripremiTabelu;
-    PripremiHeader pripremiHeader;    
-    PripremiFooter pripremiFooter;
+    public PripremiZakljucak pripremiZakljucak;
+    public PripremiKraj pripremiKraj;    
+    public PripremiFooter pripremiFooter;
     
-    public FormPrintPreview (MojaTabela mt1, FormForme koZove){
+    public String oznakaStampe;
+    public String kojaStampa;
+    
+    public FormPrintPreview (MojaTabela mt1, FormForme koZove, String oznakaStampe, String kojaStampa){
         super();
         this.mt1 = mt1;
         this.koZove = koZove;
+        this.oznakaStampe = oznakaStampe;
+        this.kojaStampa = kojaStampa;
     }
     public void Prikazi() throws IOException, Exception{
         koZove.setEnabled(false);
 
-        //rezolucija
-        RezolucijaEkrana re = new RezolucijaEkrana();
-        Dimension fullScr = re.FullScreen();
+        RezolucijaEkrana re = new RezolucijaEkrana(); //rezolucija
+        Dimension fullScr = re.FullScreen();   
+        setSize(fullScr);                             //Velicina Forme (Cela Strana)
+        setLocationRelativeTo(null);  
         
-        //Velicina Forme (Cela Strana)
-        setSize(fullScr);
-        setLocationRelativeTo(null);
-        
-        //Ovde ucitati format iz baze
-        pj = PrinterJob.getPrinterJob();
+        pj = PrinterJob.getPrinterJob();      
         pageFormat = pj.defaultPage();
-
-        //Postavljanje vrednosti Margina u PrinterJob.pageDialog
-        stampaSetujPage = new StampaSetujPage();
+        stampaSetujPage = new StampaSetujPage();                          //Postavljanje vrednosti Margina u PrinterJob.pageDialog iz BAZE
         stampaSetujPage.SetujPageSetup(pageFormat, pj, this, koZove);
 
-        //HEADER
-        headerLineVectorAll = new Vector();
-        pripremiHeader = new PripremiHeader(this, pageFormat, headerLineVectorAll);
-        headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();
-        
-        //FOOTER
-        footerLineVectorAll = new Vector();
-        pripremiFooter = new PripremiFooter(this, pageFormat, footerLineVectorAll);
+        /*pripremiHeader = new PripremiHeader(this, pageFormat, new Vector(), oznakaStampe);        //HEADER
+        headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();       
+        pripremiNaslov = new PripremiNaslov(this, pageFormat, new Vector(), oznakaStampe);        //NASLOV
+        naslovLineVectorAll = pripremiNaslov.NaslovLineVectorAll(); 
+        pripremiUvod = new PripremiUvod(this, pageFormat, new Vector(), oznakaStampe);            //UVOD  
+        uvodLineVectorAll = pripremiUvod.UvodLineVectorAll();
+        pripremiZakljucak = new PripremiZakljucak(this, pageFormat, new Vector(), oznakaStampe);  //ZAKLUCAK
+        zakljucakLineVectorAll = pripremiZakljucak.ZakljucakLineVectorAll();        
+        pripremiKraj = new PripremiKraj(this, pageFormat, new Vector(), oznakaStampe);            //KRAJ
+        krajLineVectorAll = pripremiKraj.KrajLineVectorAll();        
+        pripremiFooter = new PripremiFooter(this, pageFormat, new Vector(), oznakaStampe);        //FOOTER
         footerLineVectorAll = pripremiFooter.FooterLineVectorAll();
-        
-        //Priprema podataka za stampu Tabele(lineVector-a)        
+
+        //Priprema podataka za stampu Tabele(lineVector-a) sa TableHeader-om  ili neceg drugog      
         tableLineVectorAll = new Vector();
-        pripremiTabelu = new PripremiTabelu(this, pageFormat, tableLineVectorAll);
-        tableLineVectorAll = pripremiTabelu.TableLineVectorAll(mt1); 
+        switch (oznakaStampe){
+            case "Tabela":
+                pripremiTabelu = new PripremiTabelu(this, pageFormat, tableLineVectorAll);
+                tableLineVectorAll = pripremiTabelu.TableLineVectorAll(mt1);
+                
+                tableHeaderLineVector = pripremiTabelu.TableHeaderLineVector(mt1);
+                tableMedjuZbirVector = pripremiTabelu.TableMedjuZbirVector(mt1, koZove, kojaStampa);
+                OgranicenjaMedjuZbir ogranicenjaStampa= new OgranicenjaMedjuZbir();
+                kojaPoljaMedjuZbirVector = ogranicenjaStampa.KolonaMedjuZbir(koZove, kojaStampa);
+                
+                break;
+            default:
+                tableLineVectorAll = new Vector();
+                tableHeaderLineVector = new Vector();
+                tableMedjuZbirVector = new Vector();
+                kojaPoljaMedjuZbirVector = new Vector();
+        }*/
+        
+        //Priprema svih delova za Stampu - kda se bude htela stampa za neku formu a ne za tabelu u ovom delu dodati
+        PripremiSve pripremiSve = new PripremiSve();
+        pripremiSve.Priprema(this);
         
         //Preview Strane
-        prikazi = new PagesPripremi(headerLineVectorAll, footerLineVectorAll, tableLineVectorAll, pageFormat, this, mt1);
+        prikazi = new PagesPripremi(headerLineVectorAll, naslovLineVectorAll, uvodLineVectorAll, 
+                                    zakljucakLineVectorAll, krajLineVectorAll, footerLineVectorAll,
+                                    tableLineVectorAll, tableHeaderLineVector, tableMedjuZbirVector, kojaPoljaMedjuZbirVector, pageFormat, this, mt1);
         add(new JScrollPane(prikazi), BorderLayout.CENTER);
         
         //Button u vrhu strane - Stampa, prethodni, sledeci
         stampaMenuBar = new PreviewMenuBar(true, this);
-        add(stampaMenuBar, BorderLayout.NORTH);        
-        
+        add(stampaMenuBar, BorderLayout.NORTH);              
         setVisible(true);       
         
         //Listner-i ------------------------------------------------------------------------------------------ 
@@ -109,8 +148,7 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 koZove.setEnabled(true);
             }
         });
-    }
-    
+    }   
     public void showTitle(PagesPripremi prikazi) {
         int currentPage = prikazi.getTrenutnatPage() + 1;
         int numPages = prikazi.getNumPages();
@@ -118,11 +156,6 @@ public class FormPrintPreview extends JFrame implements ActionListener{
         try{stampaMenuBar.tekucaStrana.setText("" + currentPage);
         }catch(Exception e){} 
     }
-    
-    public void preracunajSirinu(String vrednost){
-        
-    }
-    
     @Override
     public void actionPerformed(ActionEvent e) {
         String a = e.getActionCommand();
@@ -139,36 +172,62 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 stampaSetujPage.setMTop((int)(pageFormat.getImageableY() / preracun));
                 stampaSetujPage.setMDown((int)((pageFormat.getHeight() - pageFormat.getImageableY() - pageFormat.getImageableHeight() + 0.5) / preracun));
 
-                //HEADER
-                pripremiHeader = new PripremiHeader(this, pageFormat, new Vector());
-                headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();
-        
-                //FOOTER
-                pripremiFooter = new PripremiFooter(this, pageFormat, new Vector());
-                footerLineVectorAll = pripremiFooter.FooterLineVectorAll();
-                
-                //Priprema podataka za stampu Tabele(lineVector-a)
-                pripremiTabelu = new PripremiTabelu(this, pageFormat, new Vector());
+
+        /*pripremiHeader = new PripremiHeader(this, pageFormat, new Vector(), oznakaStampe);        //HEADER
+        headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();       
+        pripremiNaslov = new PripremiNaslov(this, pageFormat, new Vector(), oznakaStampe);        //NASLOV
+        naslovLineVectorAll = pripremiNaslov.NaslovLineVectorAll(); 
+        pripremiUvod = new PripremiUvod(this, pageFormat, new Vector(), oznakaStampe);            //UVOD  
+        uvodLineVectorAll = pripremiUvod.UvodLineVectorAll();
+        pripremiZakljucak = new PripremiZakljucak(this, pageFormat, new Vector(), oznakaStampe);  //ZAKLUCAK
+        zakljucakLineVectorAll = pripremiZakljucak.ZakljucakLineVectorAll();        
+        pripremiKraj = new PripremiKraj(this, pageFormat, new Vector(), oznakaStampe);            //KRAJ
+        krajLineVectorAll = pripremiKraj.KrajLineVectorAll();        
+        pripremiFooter = new PripremiFooter(this, pageFormat, new Vector(), oznakaStampe);        //FOOTER
+        footerLineVectorAll = pripremiFooter.FooterLineVectorAll();
+
+        //Priprema podataka za stampu Tabele(lineVector-a) sa TableHeader-om  ili neceg drugog      
+        tableLineVectorAll = new Vector();
+        switch (oznakaStampe){
+            case "Tabela":
+                pripremiTabelu = new PripremiTabelu(this, pageFormat, tableLineVectorAll);
                 tableLineVectorAll = pripremiTabelu.TableLineVectorAll(mt1);
                 
+                tableHeaderLineVector = pripremiTabelu.TableHeaderLineVector(mt1);
+                tableMedjuZbirVector = pripremiTabelu.TableMedjuZbirVector(mt1, koZove, kojaStampa);
+                OgranicenjaMedjuZbir ogranicenjaStampa= new OgranicenjaMedjuZbir();
+            try {kojaPoljaMedjuZbirVector = ogranicenjaStampa.KolonaMedjuZbir(koZove, kojaStampa);
+            } catch (SQLException ex) {Logger.getLogger(FormPrintPreview.class.getName()).log(Level.SEVERE, null, ex);}
+                
+                break;
+            default:
+                tableLineVectorAll = new Vector();
+                tableHeaderLineVector = new Vector();
+                tableMedjuZbirVector = new Vector();
+                kojaPoljaMedjuZbirVector = new Vector();
+        }*/                
+             
+                
+                PripremiSve pripremiSve = new PripremiSve();
+                pripremiSve.Priprema(this);
+                
+                
                 prikazi.setHeaderLineVectorAll(headerLineVectorAll);
+                prikazi.setNaslovLineVectorAll(naslovLineVectorAll);
+                prikazi.setUvodLineVectorAll(uvodLineVectorAll);                
+                prikazi.setZakljucakLineVectorAll(zakljucakLineVectorAll);
+                prikazi.setKrajLineVectorAll(krajLineVectorAll);                
                 prikazi.setFooterLineVectorAll(footerLineVectorAll);                
                 prikazi.setLineVectorAll(tableLineVectorAll);
-
+                prikazi.setTableHeaderLineVector(tableHeaderLineVector);
+                prikazi.setTableMedjuZbirVector(tableMedjuZbirVector);
+                
                 if (prikazi != null) prikazi.pageInit(pageFormat);
                 break;
-            case "nextButton":
-                if (prikazi != null) prikazi.sledecaStrana(); 
-                break;
-            case "previousButton":
-                if (prikazi != null) prikazi.prethodnaStrana(); 
-                break;                
-            case "lastButton":
-                if (prikazi != null) prikazi.poslednjaStrana();
-                break;                
-            case "firstButton":
-                if (prikazi != null) prikazi.prvaStrana();
-                break; 
+            case "nextButton":      if (prikazi != null) prikazi.sledecaStrana();    break;
+            case "previousButton":  if (prikazi != null) prikazi.prethodnaStrana();  break;                
+            case "lastButton":      if (prikazi != null) prikazi.poslednjaStrana();  break;                
+            case "firstButton":     if (prikazi != null) prikazi.prvaStrana();       break; 
             case "printButton":
                 PrintService[] stampaci = PrinterJob.lookupPrintServices();
                 DocPrintJob docPrintJob = null;
@@ -183,8 +242,7 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 if (pj.printDialog()) {
                     prikazi.setJestStampa(true);
                     prikazi.setBrKopija(pj.getCopies());
-                    try {pj.print();                            
-                    } catch (PrinterException e1) {}
+                    try {pj.print();} catch (PrinterException e1) {}
                     prikazi.setBrKopija(1);
                     prikazi.setJestStampa(false);
                 }

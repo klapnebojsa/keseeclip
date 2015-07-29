@@ -24,12 +24,17 @@ public class Obavestenja {
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "<" + KeyEvent.getKeyText(funkcijskiTasteri.getFtNovi()) + ">-Novi";}
         oL.proveriIzmenaListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtIspravi()) + ">-Izmena";}        
+        oL.proveriStampaTblListener();
+        if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtStampaTbl()) + ">-Štampa Tabele";}
+        oL.proveriStampaPodTblListener();
+        if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtStampaPodTbl()) + ">-Štampa Stavki dokumenta";}        
+        oL.proveriStampaIzvListener();
+        if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtStampaIzv()) + ">-Štampa Izvestaja";} 
         oL.proveriMargineListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtMargine()) + ">-Margine";}        
-        oL.proveriStampaListener();
-        if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtStampa()) + ">-Stampa";}        
         oL.proveriBrisiListener();
         if (!oL.getOgranicenja()){obavestenje= obavestenje + "   <" + KeyEvent.getKeyText(funkcijskiTasteri.getFtBrisi()) + ">-Brisanje";}
+         
         return obavestenje;
         //return "<F1>-Novi, <F2>-Izmena, <F12>-Margine, <Del>-Brisi";
     }

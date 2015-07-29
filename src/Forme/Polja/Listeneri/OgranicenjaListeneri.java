@@ -31,7 +31,12 @@ public class OgranicenjaListeneri {
     private String StampaListener(){
         return "Margine,";
     }
-    
+    private String StampaPodTblListener(){
+        return "Margine,Vlasnik,Kese,Partneri,";
+    }
+    private String StampaIzvListener(){
+        return "Margine,Vlasnik,Kese,Partneri,";
+    } 
     private void setOgranicenja (boolean ogranicenja){
         this.ogranicenja = ogranicenja;
     }
@@ -60,8 +65,18 @@ public class OgranicenjaListeneri {
         if (a.length>1){setOgranicenja(true);
         }else{setOgranicenja(false);}
     }
-    public void proveriStampaListener(){
+    public void proveriStampaTblListener(){
         String[] a = StampaListener().split(koZove);
+        if (a.length>1){setOgranicenja(true);
+        }else{setOgranicenja(false);}
+    }
+    public void proveriStampaPodTblListener(){
+        String[] a = StampaPodTblListener().split(koZove);
+        if (a.length>1){setOgranicenja(true);
+        }else{setOgranicenja(false);}
+    }
+    public void proveriStampaIzvListener(){
+        String[] a = StampaIzvListener().split(koZove);
         if (a.length>1){setOgranicenja(true);
         }else{setOgranicenja(false);}
     }

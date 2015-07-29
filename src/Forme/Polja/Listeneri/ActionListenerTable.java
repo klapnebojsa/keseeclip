@@ -77,12 +77,27 @@ public class ActionListenerTable {
         }
         
         //---------------- F5 STAMPA --------------------------------------------------------------------
-        oL.proveriStampaListener();
-        if (e.getKeyCode() == ft.getFtStampa() && !oL.getOgranicenja()) {                 // F5-Stampa
-            FormPrintPreview formPrintPreview = new FormPrintPreview(mt1, koZove);
+        oL.proveriStampaTblListener();
+        if (e.getKeyCode() == ft.getFtStampaTbl() && !oL.getOgranicenja()) {                 // F5-Stampa
+            FormPrintPreview formPrintPreview = new FormPrintPreview(mt1, koZove, "Tabela", "StampaTabele");
             formPrintPreview.Prikazi();            
         }
-
+        
+        //---------------- F7 STAMPA PodTabele (npr sada smo na nalogu a ovo stampa stavke naloga)-------
+        /*oL.proveriStampaPodTblListener();
+        if (e.getKeyCode() == ft.getFtStampaPodTbl() && !oL.getOgranicenja()) {                 // F7-Stampa
+            FormPrintPreview formPrintPreview = new FormPrintPreview(mt2, koZove, "Tabela", "StampaPodTabele");
+            formPrintPreview.Prikazi();            
+        }*/        
+        
+        
+        //---------------- F9 STAMPA POSEBNOG IZVESTAJA ZA JEDNU STAVKU IZ TABELE ------------------------
+        /*oL.proveriStampaPosIzvListener();
+        if (e.getKeyCode() == ft.getFtStampaIzv() && !oL.getOgranicenja()) {                 // F9-Stampa
+            FormPrintPreview formPrintPreview = new FormPrintPreview(mt1, koZove, "Obrazac", "StampaIzvestaja);
+            formPrintPreview.Prikazi();            
+        }*/
+        
         //---------------- F12 MARGINE --------------------------------------------------------------------
         oL.proveriMargineListener();
         if (e.getKeyCode() == ft.getFtMargine() && !oL.getOgranicenja()) {                 // F12-Margine
