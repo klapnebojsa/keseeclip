@@ -1,12 +1,6 @@
 package JUnit;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import org.junit.runner.JUnitCore;
-
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-import com.sun.net.httpserver.Authenticator.Failure;
 
 public class KeseProbaTestRunner {
     public static void main(String[] args) {
