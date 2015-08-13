@@ -31,4 +31,11 @@ public class RezolucijaEkrana {
         Dimension vel = new Dimension((int) (rezolucija.getWidth()), (int) (rezolucija.getHeight()));
         return vel;
     }
+    public Dimension FullScreenMaloManje() {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice ekran = env.getScreenDevices()[0];
+        DisplayMode rezolucija = ekran.getDisplayMode();
+        Dimension vel = new Dimension((int) (rezolucija.getWidth()), (int) (rezolucija.getHeight() - 40));
+        return vel;
+    }    
 }

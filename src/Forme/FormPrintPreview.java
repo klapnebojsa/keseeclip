@@ -7,6 +7,8 @@ package Forme;
 
 import Forme.Konstante.Mere;
 import Forme.Tabele.MojaTabela;
+import JUnitTestPackage.Podaci.JUnitCitajVector;
+import JUnitTestPackage.Podaci.JUnitUpisiVector;
 import Sistem.OsnovneDefinicije.RezolucijaEkrana;
 import Stampa.PagesPripremi;
 import Stampa.PreviewMenuBar;
@@ -44,7 +46,7 @@ public class FormPrintPreview extends JFrame implements ActionListener{
     boolean ispravanPrikaz = true;
     public PageFormat pageFormat;
     List mojeMargine;
-    public PagesPripremi prikazi;
+    public PagesPripremi pagesPripremi;
     public PreviewMenuBar stampaMenuBar;
     PrinterJob pj;
     public StampaSetujPage stampaSetujPage;
@@ -72,7 +74,6 @@ public class FormPrintPreview extends JFrame implements ActionListener{
     
     public String oznakaStampe;
     public String kojaStampa;
-    
     public FormPrintPreview (MojaTabela mt1, FormForme koZove, String oznakaStampe, String kojaStampa){
         super();
         this.mt1 = mt1;
@@ -84,7 +85,7 @@ public class FormPrintPreview extends JFrame implements ActionListener{
         koZove.setEnabled(false);
 
         RezolucijaEkrana re = new RezolucijaEkrana(); //rezolucija
-        Dimension fullScr = re.FullScreen();   
+        Dimension fullScr = re.FullScreenMaloManje();   
         setSize(fullScr);                             //Velicina Forme (Cela Strana)
         setLocationRelativeTo(null);  
         
@@ -93,54 +94,27 @@ public class FormPrintPreview extends JFrame implements ActionListener{
         stampaSetujPage = new StampaSetujPage();                          //Postavljanje vrednosti Margina u PrinterJob.pageDialog iz BAZE
         stampaSetujPage.SetujPageSetup(pageFormat, pj, this, koZove);
 
-        /*pripremiHeader = new PripremiHeader(this, pageFormat, new Vector(), oznakaStampe);        //HEADER
-        headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();       
-        pripremiNaslov = new PripremiNaslov(this, pageFormat, new Vector(), oznakaStampe);        //NASLOV
-        naslovLineVectorAll = pripremiNaslov.NaslovLineVectorAll(); 
-        pripremiUvod = new PripremiUvod(this, pageFormat, new Vector(), oznakaStampe);            //UVOD  
-        uvodLineVectorAll = pripremiUvod.UvodLineVectorAll();
-        pripremiZakljucak = new PripremiZakljucak(this, pageFormat, new Vector(), oznakaStampe);  //ZAKLUCAK
-        zakljucakLineVectorAll = pripremiZakljucak.ZakljucakLineVectorAll();        
-        pripremiKraj = new PripremiKraj(this, pageFormat, new Vector(), oznakaStampe);            //KRAJ
-        krajLineVectorAll = pripremiKraj.KrajLineVectorAll();        
-        pripremiFooter = new PripremiFooter(this, pageFormat, new Vector(), oznakaStampe);        //FOOTER
-        footerLineVectorAll = pripremiFooter.FooterLineVectorAll();
-
-        //Priprema podataka za stampu Tabele(lineVector-a) sa TableHeader-om  ili neceg drugog      
-        tableLineVectorAll = new Vector();
-        switch (oznakaStampe){
-            case "Tabela":
-                pripremiTabelu = new PripremiTabelu(this, pageFormat, tableLineVectorAll);
-                tableLineVectorAll = pripremiTabelu.TableLineVectorAll(mt1);
-                
-                tableHeaderLineVector = pripremiTabelu.TableHeaderLineVector(mt1);
-                tableMedjuZbirVector = pripremiTabelu.TableMedjuZbirVector(mt1, koZove, kojaStampa);
-                OgranicenjaMedjuZbir ogranicenjaStampa= new OgranicenjaMedjuZbir();
-                kojaPoljaMedjuZbirVector = ogranicenjaStampa.KolonaMedjuZbir(koZove, kojaStampa);
-                
-                break;
-            default:
-                tableLineVectorAll = new Vector();
-                tableHeaderLineVector = new Vector();
-                tableMedjuZbirVector = new Vector();
-                kojaPoljaMedjuZbirVector = new Vector();
-        }*/
-        
         //Priprema svih delova za Stampu - kda se bude htela stampa za neku formu a ne za tabelu u ovom delu dodati
         PripremiSve pripremiSve = new PripremiSve();
         pripremiSve.Priprema(this);
-        
+
         //Preview Strane
-        prikazi = new PagesPripremi(headerLineVectorAll, naslovLineVectorAll, uvodLineVectorAll, 
+        pagesPripremi = new PagesPripremi(headerLineVectorAll, naslovLineVectorAll, uvodLineVectorAll, 
                                     zakljucakLineVectorAll, krajLineVectorAll, footerLineVectorAll,
                                     tableLineVectorAll, tableHeaderLineVector, tableMedjuZbirVector, kojaPoljaMedjuZbirVector, pageFormat, this, mt1);
-        add(new JScrollPane(prikazi), BorderLayout.CENTER);
-        
+  
+        JScrollPane scrollP= new JScrollPane(pagesPripremi);
+        scrollP.setWheelScrollingEnabled(true);
+        scrollP.getVerticalScrollBar().setUnitIncrement(40);
+        scrollP.getHorizontalScrollBar().setUnitIncrement(40);  
+        add(scrollP, BorderLayout.CENTER);        
+
         //Button u vrhu strane - Stampa, prethodni, sledeci
         stampaMenuBar = new PreviewMenuBar(true, this);
-        add(stampaMenuBar, BorderLayout.NORTH);              
-        setVisible(true);       
-        
+        stampaMenuBar.setOpaque(false);
+        add(stampaMenuBar, BorderLayout.NORTH);
+        setVisible(true); 
+
         //Listner-i ------------------------------------------------------------------------------------------ 
         // X-Za zatvaranje forme
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -148,10 +122,29 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 koZove.setEnabled(true);
             }
         });
+
+        ////////PODACI ZA JUNIT *******************************************************************   
+        //********** UPIS U JUnit FAJL
+        JUnitUpisiVector jUnitUpisiVector = new JUnitUpisiVector();
+        jUnitUpisiVector.Upisi(koZove.brokerDAO.a.ImeKlase(), pagesPripremi);
+        /*//********** CITANJE IZ JUnit FAJLA             
+        JUnitCitajVector jUnitCitajStampa = new JUnitCitajVector();
+        Vector productsFromFile = new Vector((Vector) jUnitCitajStampa.Citaj(koZove.brokerDAO.a.ImeKlase()));                
+        //////// *************************************************************************************/         
+        
+        /*//********** UPIS U JUnit FAJL
+        JUnitUpisiPagesPripremi jUnitUpisiPagesPripremi = new JUnitUpisiPagesPripremi();
+        jUnitUpisiPagesPripremi.Upisi(koZove.brokerDAO.a.ImeKlase(), pagesPripremi);       
+
+        /*//********** CITANJE IZ JUnit FAJLA 
+        PagesPripremi productsFromFilePP = new PagesPripremi();
+        JUnitCitajPagesPripremi jUnitCitajPagesPripremi = new JUnitCitajPagesPripremi();
+        productsFromFilePP = (PagesPripremi) jUnitCitajPagesPripremi.Citaj(koZove.brokerDAO.a.ImeKlase());                
+        //////// *************************************************************************************/           
     }   
-    public void showTitle(PagesPripremi prikazi) {
-        int currentPage = prikazi.getTrenutnatPage() + 1;
-        int numPages = prikazi.getNumPages();
+    public void showTitle(PagesPripremi pagesPripremi) {
+        int currentPage = pagesPripremi.getTrenutnatPage() + 1;
+        int numPages = pagesPripremi.getNumPages();
         setTitle("Print Preview - " + koZove.getOpisForme() +  " strana " + currentPage + " od " + numPages);
         try{stampaMenuBar.tekucaStrana.setText("" + currentPage);
         }catch(Exception e){} 
@@ -171,63 +164,41 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 stampaSetujPage.setMRight((int)((pageFormat.getWidth() - pageFormat.getImageableX() - pageFormat.getImageableWidth() + 0.5) / preracun));                 
                 stampaSetujPage.setMTop((int)(pageFormat.getImageableY() / preracun));
                 stampaSetujPage.setMDown((int)((pageFormat.getHeight() - pageFormat.getImageableY() - pageFormat.getImageableHeight() + 0.5) / preracun));
-
-
-        /*pripremiHeader = new PripremiHeader(this, pageFormat, new Vector(), oznakaStampe);        //HEADER
-        headerLineVectorAll = pripremiHeader.HeaderLineVectorAll();       
-        pripremiNaslov = new PripremiNaslov(this, pageFormat, new Vector(), oznakaStampe);        //NASLOV
-        naslovLineVectorAll = pripremiNaslov.NaslovLineVectorAll(); 
-        pripremiUvod = new PripremiUvod(this, pageFormat, new Vector(), oznakaStampe);            //UVOD  
-        uvodLineVectorAll = pripremiUvod.UvodLineVectorAll();
-        pripremiZakljucak = new PripremiZakljucak(this, pageFormat, new Vector(), oznakaStampe);  //ZAKLUCAK
-        zakljucakLineVectorAll = pripremiZakljucak.ZakljucakLineVectorAll();        
-        pripremiKraj = new PripremiKraj(this, pageFormat, new Vector(), oznakaStampe);            //KRAJ
-        krajLineVectorAll = pripremiKraj.KrajLineVectorAll();        
-        pripremiFooter = new PripremiFooter(this, pageFormat, new Vector(), oznakaStampe);        //FOOTER
-        footerLineVectorAll = pripremiFooter.FooterLineVectorAll();
-
-        //Priprema podataka za stampu Tabele(lineVector-a) sa TableHeader-om  ili neceg drugog      
-        tableLineVectorAll = new Vector();
-        switch (oznakaStampe){
-            case "Tabela":
-                pripremiTabelu = new PripremiTabelu(this, pageFormat, tableLineVectorAll);
-                tableLineVectorAll = pripremiTabelu.TableLineVectorAll(mt1);
-                
-                tableHeaderLineVector = pripremiTabelu.TableHeaderLineVector(mt1);
-                tableMedjuZbirVector = pripremiTabelu.TableMedjuZbirVector(mt1, koZove, kojaStampa);
-                OgranicenjaMedjuZbir ogranicenjaStampa= new OgranicenjaMedjuZbir();
-            try {kojaPoljaMedjuZbirVector = ogranicenjaStampa.KolonaMedjuZbir(koZove, kojaStampa);
-            } catch (SQLException ex) {Logger.getLogger(FormPrintPreview.class.getName()).log(Level.SEVERE, null, ex);}
-                
-                break;
-            default:
-                tableLineVectorAll = new Vector();
-                tableHeaderLineVector = new Vector();
-                tableMedjuZbirVector = new Vector();
-                kojaPoljaMedjuZbirVector = new Vector();
-        }*/                
-             
-                
+               
                 PripremiSve pripremiSve = new PripremiSve();
                 pripremiSve.Priprema(this);
+                             
+                pagesPripremi.setHeaderLineVectorAll(headerLineVectorAll);
+                pagesPripremi.setNaslovLineVectorAll(naslovLineVectorAll);
+                pagesPripremi.setUvodLineVectorAll(uvodLineVectorAll);                
+                pagesPripremi.setZakljucakLineVectorAll(zakljucakLineVectorAll);
+                pagesPripremi.setKrajLineVectorAll(krajLineVectorAll);                
+                pagesPripremi.setFooterLineVectorAll(footerLineVectorAll);                
+                pagesPripremi.setLineVectorAll(tableLineVectorAll);
+                pagesPripremi.setTableHeaderLineVector(tableHeaderLineVector);
+                pagesPripremi.setTableMedjuZbirVector(tableMedjuZbirVector);
                 
-                
-                prikazi.setHeaderLineVectorAll(headerLineVectorAll);
-                prikazi.setNaslovLineVectorAll(naslovLineVectorAll);
-                prikazi.setUvodLineVectorAll(uvodLineVectorAll);                
-                prikazi.setZakljucakLineVectorAll(zakljucakLineVectorAll);
-                prikazi.setKrajLineVectorAll(krajLineVectorAll);                
-                prikazi.setFooterLineVectorAll(footerLineVectorAll);                
-                prikazi.setLineVectorAll(tableLineVectorAll);
-                prikazi.setTableHeaderLineVector(tableHeaderLineVector);
-                prikazi.setTableMedjuZbirVector(tableMedjuZbirVector);
-                
-                if (prikazi != null) prikazi.pageInit(pageFormat);
+                if (pagesPripremi != null) pagesPripremi.pageInit(pageFormat);
+
+                ////////PODACI ZA JUNIT *******************************************************************     
+                //********** UPIS U JUnit FAJL
+                JUnitUpisiVector jUnitUpisiVector = new JUnitUpisiVector();
+                jUnitUpisiVector.Upisi(koZove.brokerDAO.a.ImeKlase(), pagesPripremi);
+
+                /*//********** CITANJE IZ JUnit FAJLA   
+                JUnitCitajVector jUnitCitajStampa = new JUnitCitajVector();
+                Vector productsFromFile = new Vector();
+                try {productsFromFile = new Vector((Vector) jUnitCitajStampa.Citaj(koZove.brokerDAO.a.ImeKlase()));
+                } catch (ClassNotFoundException ex) {Logger.getLogger(FormPrintPreview.class.getName()).log(Level.SEVERE, null, ex);}
+                //////// **************************************************************************************/    
+            
+                //Redefinisanje izbora preview-a strane
+                stampaMenuBar.setPreviewPage();       
                 break;
-            case "nextButton":      if (prikazi != null) prikazi.sledecaStrana();    break;
-            case "previousButton":  if (prikazi != null) prikazi.prethodnaStrana();  break;                
-            case "lastButton":      if (prikazi != null) prikazi.poslednjaStrana();  break;                
-            case "firstButton":     if (prikazi != null) prikazi.prvaStrana();       break; 
+            case "nextButton":      if (pagesPripremi != null) pagesPripremi.sledecaStrana();    break;
+            case "previousButton":  if (pagesPripremi != null) pagesPripremi.prethodnaStrana();  break;                
+            case "lastButton":      if (pagesPripremi != null) pagesPripremi.poslednjaStrana();  break;                
+            case "firstButton":     if (pagesPripremi != null) pagesPripremi.prvaStrana();       break; 
             case "printButton":
                 PrintService[] stampaci = PrinterJob.lookupPrintServices();
                 DocPrintJob docPrintJob = null;
@@ -238,19 +209,19 @@ public class FormPrintPreview extends JFrame implements ActionListener{
                 try {pj.setPrintService(docPrintJob.getPrintService());
                 } catch (PrinterException ex) { Logger.getLogger(FormPrintPreview.class.getName()).log(Level.SEVERE, null, ex);}
 
-                pj.setPrintable(prikazi, pageFormat);
+                pj.setPrintable(pagesPripremi, pageFormat);
                 if (pj.printDialog()) {
-                    prikazi.setJestStampa(true);
-                    prikazi.setBrKopija(pj.getCopies());
-                    try {pj.print();} catch (PrinterException e1) {}
-                    prikazi.setBrKopija(1);
-                    prikazi.setJestStampa(false);
+                    pagesPripremi.setJestStampa(true);
+                    pagesPripremi.setBrKopija(pj.getCopies());
+                    try {pj.print();} catch (PrinterException e1) {}                    
+                    pagesPripremi.setBrKopija(1);
+                    pagesPripremi.setJestStampa(false);
                 }
                 break;                                  
             default:
                 break;
         }
-        if (prikazi != null) showTitle(prikazi);
+        if (pagesPripremi != null) showTitle(pagesPripremi);
     }
     public void setPageFormat(PageFormat pageFormat){
         this.pageFormat = pageFormat;

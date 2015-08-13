@@ -6,16 +6,13 @@
 package Stampa;
 
 import Forme.FormPrintPreview;
-import Forme.Ispis.Formatiraj;
 import Forme.Konstante.Mere;
-import Forme.Polja.Listeneri.FocusTxt;
 import Forme.Tabele.MojaTabela;
 import Sistem.OsnovneDefinicije.RezolucijaEkrana;
 import Stampa.Podaci.FontMetric;
 import Stampa.Podaci.Konstante;
 import Stampa.Podaci.PoljeZaStampu;
 import Stampa.Preracunaj.DeoStampeVisina;
-import Stampa.Pripremi.PripremiTabelu;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -27,7 +24,7 @@ import java.awt.print.Printable;
 import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,10 +34,10 @@ import javax.swing.JComponent;
  *
  * @author Nebojsa
  */
-public class PagesPripremi extends JComponent implements Printable { 
+public class PagesPripremi extends JComponent implements Printable, Serializable{ 
     public double p = 1;
     private int trenutniRbrStrane;
-    private Vector pageVector;   
+    public Vector pageVector;   
     private Vector tableLineVectorAll;
     private Vector headerLineVectorAll;
     private Vector naslovLineVectorAll;
@@ -57,6 +54,8 @@ public class PagesPripremi extends JComponent implements Printable {
     private Font font;
     private int fontSize;
     private Dimension preferredSize;
+    private Dimension prefSize;
+    
     private Dimension ukupnoOsnovno;
     private Dimension ukupnoSize;
     
@@ -78,6 +77,8 @@ public class PagesPripremi extends JComponent implements Printable {
                          Vector zakljucakLineVectorAll, Vector krajLineVectorAll, Vector footerLineVectorAll,
                          Vector tableLineVectorAll, Vector tableHeaderLineVector, Vector tableMedjuZbirVector, Vector kojaPoljaMedjuZbirVector,
                          PageFormat pageFormat, final FormPrintPreview formPrintPreview, MojaTabela mt1) throws IOException {
+        super();
+        this.setLayout(null);
         this.pageFormat=pageFormat;     
         this.formPrintPreview = formPrintPreview;
         this.mt1 = mt1;
@@ -117,6 +118,10 @@ public class PagesPripremi extends JComponent implements Printable {
                 repaint();  
             }
         });
+    }
+
+    public PagesPripremi() {
+        super();        
     }
     public void pageInit(PageFormat pageFormat) { 
         double medjY = formPrintPreview.stampaSetujPage.getMMedjY();
@@ -163,7 +168,7 @@ public class PagesPripremi extends JComponent implements Printable {
                     noviLineMZ.addElement(redefinisiMedjuZbir.redefinisi(formPrintPreview, lineMZ, line, fff, i, (int)formPrintPreview.stampaSetujPage.getMVelFonta(), (boolean)kojaPoljaMedjuZbirVector.elementAt(i), medjX));
                 }                
             }catch(Exception e){ }
-            tableMedjuZbirVectorAll.addElement(noviLineMZ);
+            if (noviLineMZ.size()!=0)tableMedjuZbirVectorAll.addElement(noviLineMZ);
             
             //Kontrola kada je nova strana
             if (y + (visina+medjY+medjYDw) + visinaPomocno > pageFormat.getImageableHeight()) {
@@ -207,7 +212,8 @@ public class PagesPripremi extends JComponent implements Printable {
             for (int i = 0; i < footerLineVectorAll.size(); i++){pageXX.add((Vector)footerLineVectorAll.get(i));}            //Dodavanje Footer-a na zadnjoj strani
             pageVector.addElement(pageXX);
         }              
-        preferredSize = new Dimension((int) pageFormat.getImageableWidth(), (int) pageFormat.getImageableHeight());
+        prefSize = new Dimension((int) pageFormat.getImageableWidth(), (int) pageFormat.getImageableHeight());
+        preferredSize = (new Dimension(prefSize.height, (int)prefSize.width));        
         revalidate();
         repaint();
     }
@@ -218,9 +224,10 @@ public class PagesPripremi extends JComponent implements Printable {
         FontMetric fontMetric = new FontMetric(new Font(fName, fStyle, (int)formPrintPreview.stampaSetujPage.getMVelFonta()));
         double visinaPrethodno = fontMetric.getVisinaFonta();
         
-        sirinaPage = preferredSize.width + formPrintPreview.stampaSetujPage.getMLeft() + formPrintPreview.stampaSetujPage.getMRight();
-        visinaPage = preferredSize.height + formPrintPreview.stampaSetujPage.getMTop() + formPrintPreview.stampaSetujPage.getMDown();
-        
+        sirinaPage = prefSize.width + formPrintPreview.stampaSetujPage.getMLeft() + formPrintPreview.stampaSetujPage.getMRight();
+        visinaPage = prefSize.height + formPrintPreview.stampaSetujPage.getMTop() + formPrintPreview.stampaSetujPage.getMDown();
+   
+        setPreferredSize(new Dimension((int)(prefSize.width*1.2*p), (int)(prefSize.height*1.2*p)));
         ukupnoOsnovno = new Dimension((int)sirinaPage, (int)visinaPage);
         double resizeP;
         if (getJesteStampa()){
@@ -242,8 +249,9 @@ public class PagesPripremi extends JComponent implements Printable {
             double p = visinaNovo / visinaPrethodno;
             sirinaPage = sirinaPage * p;
             visinaPage = visinaPage * p;  
-
-            pocetakPage.width = (fullScr.width - (int)sirinaPage) / 2;
+            if (getPreferredSize().width > fullScr.width){ pocetakPage.width = 50;                  
+            }else{ pocetakPage.width = (fullScr.width - (int)sirinaPage) / 2; }
+          
             pocetakPage.height = 30;
             brKopija=1;
             resizeP = p;
@@ -269,7 +277,7 @@ public class PagesPripremi extends JComponent implements Printable {
     public Dimension getPocetakPage(){   return pocetakPage;   }
     public void setFont(Font font){      this.font = font;}
     public Font getFont(){               return font;  } 
-    public Dimension getPreferredSize() {return preferredSize;   }
+    //public Dimension getPreferredSize() {return preferredSize;   }
     public Dimension getUkupnoOsnovno() {return ukupnoOsnovno;   }
     public Dimension getUkupnoSize() {   return ukupnoSize;    }
     public int getTrenutnatPage() {      return trenutniRbrStrane;    }
@@ -290,9 +298,14 @@ public class PagesPripremi extends JComponent implements Printable {
         trenutniRbrStrane=0;
         repaint();
     }
+    public void ovaStrana(int brStr) {
+        trenutniRbrStrane=brStr-1;
+        repaint();
+    }    
     public void setJestStampa(boolean jesteStampa){ this.jesteStampa = jesteStampa; }
     public boolean getJesteStampa(){  return jesteStampa; }
     public void setBrKopija(int brKopija){this.brKopija = brKopija;  }
+    
     public void setHeaderLineVectorAll(Vector <PoljeZaStampu> headerLineVectorAll){
         this.headerLineVectorAll = headerLineVectorAll;
     }
@@ -305,8 +318,8 @@ public class PagesPripremi extends JComponent implements Printable {
     public void setZakljucakLineVectorAll(Vector <PoljeZaStampu> zakljucakLineVectorAll){
         this.zakljucakLineVectorAll = zakljucakLineVectorAll;
     }    
-    public void setKrajLineVectorAll(Vector <PoljeZaStampu> headerLineVectorAll){
-        this.headerLineVectorAll = headerLineVectorAll;
+    public void setKrajLineVectorAll(Vector <PoljeZaStampu> krajLineVectorAll){
+        this.krajLineVectorAll = krajLineVectorAll;
     }    
     public void setFooterLineVectorAll(Vector <PoljeZaStampu> footerLineVectorAll){
         this.footerLineVectorAll = footerLineVectorAll;
