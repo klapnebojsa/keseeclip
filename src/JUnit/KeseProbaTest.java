@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Nebojsa . 
+ * @author Nebojsa
  */
 public class KeseProbaTest {
     KeseProba keseProba; 
