@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class Formatiraj {
 
-    String tipVar;
+    public String tipVar;
     int decVar;
     int duzinaVar;
     Object vrednostVar;
